@@ -35,22 +35,25 @@
 .brand-footer {
   width: min(90%, 900px);
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   margin-top: 2rem;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
-.footer-left,
-.footer-right {
+.footer-date {
   font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
   font-weight: 400;
   color: #1E1E1E;
 }
 
-.footer-right {
-  text-align: right;
+.footer-email {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #1E1E1E;
 }
 
 @media (max-width: 768px) {
@@ -62,13 +65,7 @@
     font-size: 2rem;
   }
 
-  .brand-footer {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .footer-right {
-    text-align: center;
+  .footer-date {
+    font-size: 1.1rem;
   }
 }

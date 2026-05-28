@@ -7,8 +7,8 @@ function App() {
         <h1 className="brand-title">InvaQuote</h1>
         <p className="brand-subtitle">Quote, Invoice, That's it.</p>
         <div className="brand-footer">
-          <span className="footer-left">Coming this July...</span>
-          <span className="footer-right">Contact us:</span>
+          <span className="footer-date">JULY 2026</span>
+          <span className="footer-email">inquiries@InvaQuote.com</span>
         </div>
       </main>
     </>
