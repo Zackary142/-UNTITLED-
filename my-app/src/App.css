@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
 
 .landing-page {
-  height: 100vh;
+  height: 100%;
   width: 100%;
   background-color: #F5F1E8;
   display: flex;
