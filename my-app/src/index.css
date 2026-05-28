@@ -1,54 +1,27 @@
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0 !important;
-  padding: 0 !important;
-  background-color: #F5F1E8;
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html {
+html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
+  background-color: #F5F1E8;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 
 #root {
   width: 100%;
   height: 100%;
-}
-
-
-body {
-  margin: 0;
-}
-
-#root {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+  background-color: #F5F1E8;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
-  background-color: #F5F1E8;
-  padding: max(0px, env(safe-area-inset-top)) max(0px, env(safe-area-inset-right)) max(0px, env(safe-area-inset-bottom)) max(0px, env(safe-area-inset-left));
 }
 
 h1,
