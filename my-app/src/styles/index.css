@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2 {
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+}
+
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+
+[data-theme="voquota-light"] {
+  --color-base-100: #F5F1E8;
+  --color-base-200: #F3EDE2;
+  --color-base-300: #E6DDCF;
+  --color-base-content: #1E1E1E;
+  --color-accent: #D6C6A8;
+  --color-accent-content: #1E1E1E;
+}
+
+[data-theme="voquota-dark"] {
+  --color-base-100: #1E1E1E;
+  --color-base-200: #171717;
+  --color-base-300: #2c2c2c;
+  --color-base-content: #F5F1E8;
+  --color-accent: #3a3530;
+  --color-accent-content: #F5F1E8;
+}

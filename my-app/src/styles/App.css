@@ -1,26 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
 
 .landing-page {
-  height: 100%;
+  height: 100vh;
   width: 100%;
-  background-color: #F5F1E8;
+  background-color: var(--color-base-200);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 0;
   padding: 0;
-  padding-top: max(0px, env(safe-area-inset-top));
+  padding-top: calc(72px + env(safe-area-inset-top));
   padding-bottom: max(0px, env(safe-area-inset-bottom));
   padding-left: max(0px, env(safe-area-inset-left));
   padding-right: max(0px, env(safe-area-inset-right));
+}
+
+.taskbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  background-color: var(--color-base-300);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 1000;
+  border-bottom: 1px solid var(--color-base-300);
+}
+
+.taskbar-button {
+  background-color: var(--color-accent);
+  color: var(--color-accent-content);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.taskbar-button:hover {
+  opacity: 0.85;
 }
 
 .brand-title {
   font-family: 'Montserrat', sans-serif;
   font-size: 2.5rem;
   font-weight: 700;
-  color: #1E1E1E;
+  color: var(--color-base-content);
   margin: 0;
   margin-bottom: 1rem;
   text-align: center;
@@ -30,7 +61,7 @@
   font-family: 'Playfair Display', serif;
   font-size: 3rem;
   font-weight: 400;
-  color: #1E1E1E;
+  color: var(--color-base-content);
   margin: 0;
   text-align: center;
   letter-spacing: -1px;
@@ -46,30 +77,16 @@
   gap: 0.5rem;
 }
 
-.footer-date {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  color: #1E1E1E;
-}
-
+.footer-date,
 .footer-email {
   font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
   font-weight: 400;
-  color: #1E1E1E;
+  color: color-mix(in srgb, var(--color-base-content) 60%, transparent);
 }
 
 @media (max-width: 768px) {
-  .brand-title {
-    font-size: 1.8rem;
-  }
-
-  .brand-subtitle {
-    font-size: 2rem;
-  }
-
-  .footer-date {
-    font-size: 1.1rem;
-  }
+  .brand-title { font-size: 1.8rem; }
+  .brand-subtitle { font-size: 2rem; }
+  .footer-date { font-size: 1.1rem; }
 }
