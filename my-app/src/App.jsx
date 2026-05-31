@@ -3,6 +3,9 @@ import './App.css'
 function App() {
   return (
     <>
+      <header className="taskbar">
+        <button className="taskbar-button">Contractors Homepage</button>
+      </header>
       <main className="landing-page">
         <h1 className="brand-title">VoQuota</h1>
         <p className="brand-subtitle">Quote, Invoice, That's it.</p>
