@@ -6,7 +6,7 @@ export default function ContractorManagement() {
 
       <Navbar pageTitle="Document Pipeline" />
 
-      {/* Kanban Board */}
+      {/* Trello Style Board */}
       <div className="grid grid-cols-3 gap-4 p-5">
 
         {/* Quotes Column */}

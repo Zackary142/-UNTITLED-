@@ -1,6 +1,7 @@
 import { Routes, Route, useNavigate } from 'react-router-dom'
 import { ThemeProvider, useTheme } from './context/ThemeContext'
 import ContractorManagement from './pages/contractor/ContractorManagement'
+import LandingPage from './pages/LandingPage'
 import './styles/App.css'
 
 function HomeNav() {
@@ -67,6 +68,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/contractor" element={<ContractorManagement />} />
+        <Route path="/landing" element={<LandingPage />} />
+
       </Routes>
     </ThemeProvider>
   )
