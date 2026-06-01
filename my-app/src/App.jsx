@@ -10,8 +10,8 @@ function HomeNav() {
 
   return (
     <header className="taskbar" style={{ justifyContent: 'space-between' }}>
-      <button className="taskbar-button">
-      {/*<button className="taskbar-button" onClick={() => navigate('/contractor')}>*/}
+      {/* <button className="taskbar-button"> */}
+      <button className="taskbar-button" onClick={() => navigate('/contractor')}>
         Contractors Homepage
       </button>
       <button
