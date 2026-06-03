@@ -9,11 +9,12 @@ export default function Navbar({ pageTitle }) {
       {/* Left */}
       <div className="navbar-start gap-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-black rounded-lg flex items-center justify-center">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M7 1L9.5 5.5H13L9.5 8.5L11 13L7 10.5L3 13L4.5 8.5L1 5.5H4.5L7 1Z" fill="white"/>
-            </svg>
-          </div>
+          <img
+            src="/vq_logo.png"
+            alt="VoQuota"
+            className="vq-logo"
+            style={{ height: '28px', width: '28px', objectFit: 'contain' }}
+          />
           <span className="font-semibold text-sm">VoQuota</span>
         </div>
 
@@ -67,14 +68,12 @@ export default function Navbar({ pageTitle }) {
           title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {dark ? (
-            /* bulb ON — filled */
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
               <path d="M9 2a5 5 0 013.9 8.1c-.5.6-.9 1.4-.9 2.1V13a1 1 0 01-1 1H7a1 1 0 01-1-1v-.8c0-.7-.4-1.5-.9-2.1A5 5 0 019 2z" fill="currentColor" fillOpacity="0.3" stroke="currentColor" strokeWidth="1.5"/>
               <path d="M7 15.5h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
               <path d="M7.5 13h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
           ) : (
-            /* bulb OFF — outline */
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
               <path d="M9 2a5 5 0 013.9 8.1c-.5.6-.9 1.4-.9 2.1V13a1 1 0 01-1 1H7a1 1 0 01-1-1v-.8c0-.7-.4-1.5-.9-2.1A5 5 0 019 2z" stroke="currentColor" strokeWidth="1.5"/>
               <path d="M7 15.5h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>

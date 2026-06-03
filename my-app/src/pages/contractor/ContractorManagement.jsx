@@ -38,7 +38,7 @@ const divider = {
   margin: '24px 0',
 }
 
-// ── Mini card ──────────────────────────────────────────────────────────────────
+// ── Mini Quote card ──────────────────────────────────────────────────────────────────
 function QuoteCard({ card }) {
   const [visible, setVisible] = useState(true)
   if (!visible) return null

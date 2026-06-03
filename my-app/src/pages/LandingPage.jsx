@@ -18,15 +18,12 @@ export default function LandingPage() {
       }}>
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{
-            width: '28px', height: '28px', borderRadius: '6px',
-            backgroundColor: 'var(--color-base-content)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M7 1L9.5 5.5H13L9.5 8.5L11 13L7 10.5L3 13L4.5 8.5L1 5.5H4.5L7 1Z" fill="var(--color-base-100)"/>
-            </svg>
-          </div>
+          <img
+            src="/vq_logo.png"
+            alt="VoQuota"
+            className="vq-logo"
+            style={{ height: '28px', width: '28px', objectFit: 'contain' }}
+          />
           <span style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 600, fontSize: '15px' }}>VoQuota</span>
         </div>
 
@@ -42,7 +39,6 @@ export default function LandingPage() {
 
         {/* Right actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {/* Theme toggle */}
           <button onClick={toggle} title={dark ? 'Light mode' : 'Dark mode'} style={{
             background: 'none', border: 'none', cursor: 'pointer',
             color: 'var(--color-base-content)', display: 'flex', alignItems: 'center',
@@ -101,7 +97,6 @@ export default function LandingPage() {
           Quote, Invoice, That's it.
         </p>
 
-        {/* Email signup */}
         <div style={{ display: 'flex', gap: '0', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--color-base-300)' }}>
           <input
             type="email"
@@ -136,26 +131,18 @@ export default function LandingPage() {
         {/* Brand column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{
-              width: '28px', height: '28px', borderRadius: '6px',
-              backgroundColor: 'var(--color-base-content)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M7 1L9.5 5.5H13L9.5 8.5L11 13L7 10.5L3 13L4.5 8.5L1 5.5H4.5L7 1Z" fill="var(--color-base-100)"/>
-              </svg>
-            </div>
+            <img
+              src="./vq_logo.png"
+              alt="VoQuota"
+              className="vq-logo"
+              style={{ height: '28px', width: '28px', objectFit: 'contain' }}
+            />
           </div>
-          {/* Social icons */}
           <div style={{ display: 'flex', gap: '12px' }}>
             {[
-              // X
               <svg key="x" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>,
-              // Instagram
               <svg key="ig" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>,
-              // YouTube
               <svg key="yt" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.4 2.8 12 2.8 12 2.8s-4.4 0-6.8.2c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.8 9.2.8 11.5v2.1C.8 16 1 18 1 18s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.6 22.2 12 22.2 12 22.2s4.4 0 6.8-.3c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.2-2.2.2-4.4v-2C23.2 9.2 23 7 23 7zm-13.5 7.5v-6l5.5 3-5.5 3z"/></svg>,
-              // LinkedIn
               <svg key="li" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>,
             ].map((icon, i) => (
               <a key={i} href="#" style={{ color: 'var(--color-base-content)', opacity: 0.6 }}>{icon}</a>

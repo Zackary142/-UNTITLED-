@@ -61,3 +61,12 @@ h1 {
   --color-accent: #3a3530;
   --color-accent-content: #F5F1E8;
 }
+
+.vq-logo {
+  mix-blend-mode: multiply;
+}
+
+[data-theme="voquota-dark"] .vq-logo {
+  filter: invert(1);
+  mix-blend-mode: normal;
+}
