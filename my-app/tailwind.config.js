@@ -6,4 +6,8 @@ export default {
   daisyui: {
     themes: false,
   },
+  safelist: [
+    'grid-cols-1',
+    'md:grid-cols-3',
+  ],
 }
