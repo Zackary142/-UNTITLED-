@@ -281,7 +281,7 @@ export default function ContractorManagement() {
 
       {modalOpen && <CardModal onClose={() => setModalOpen(false)} onSave={handleSave} />}
 
-      <div className="grid grid-cols-3 gap-4 p-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-5">
 
         {/* ── Quotes ── */}
         <div className="flex flex-col gap-3">
