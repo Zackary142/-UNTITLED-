@@ -44,15 +44,6 @@ export default function RegisterPage() {
             <p style={{ fontFamily: font, fontSize: '13px', color: 'var(--color-base-content)', opacity: 0.5, margin: 0 }}>Get started with VoQuota for free</p>
           </div>
 
-          {/* Account type toggle */}
-          <div style={{ display: 'flex', backgroundColor: 'var(--color-base-200)', borderRadius: '8px', padding: '3px', marginBottom: '22px', border: '1px solid var(--color-base-300)' }}>
-            {['Contractor', 'Customer'].map((type, i) => (
-              <button key={type} style={{ flex: 1, padding: '7px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, backgroundColor: i === 0 ? 'var(--color-base-100)' : 'transparent', color: 'var(--color-base-content)', boxShadow: i === 0 ? '0 1px 4px rgba(0,0,0,0.08)' : 'none', opacity: i === 0 ? 1 : 0.45 }}>
-                {type}
-              </button>
-            ))}
-          </div>
-
           {/* Fields */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
