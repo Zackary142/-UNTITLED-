@@ -1,0 +1,119 @@
+import { useNavigate } from 'react-router-dom'
+import { useTheme } from '../context/ThemeContext'
+
+const font = 'Montserrat, sans-serif'
+
+export default function RegisterPage() {
+  const navigate = useNavigate()
+  const { dark, toggle } = useTheme()
+
+  return (
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-base-200)', display: 'flex', flexDirection: 'column' }}>
+
+      {/* Navbar */}
+      <header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', height: '52px', borderBottom: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-100)' }}>
+        <div onClick={() => navigate('/')} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+          <img src="/vq_logo.png" alt="VoQuota" className="vq-logo" style={{ height: '26px', width: '26px', objectFit: 'contain' }} />
+          <span style={{ fontFamily: font, fontWeight: 600, fontSize: '15px', color: 'var(--color-base-content)' }}>VoQuota</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button onClick={toggle} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-content)', opacity: 0.6, display: 'flex', alignItems: 'center', padding: '4px', borderRadius: '50%' }}>
+            {dark ? (
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M9 2a5 5 0 013.9 8.1c-.5.6-.9 1.4-.9 2.1V13a1 1 0 01-1 1H7a1 1 0 01-1-1v-.8c0-.7-.4-1.5-.9-2.1A5 5 0 019 2z" fill="currentColor" fillOpacity="0.3" stroke="currentColor" strokeWidth="1.5"/>
+                <path d="M7 15.5h4M7.5 13h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M9 2a5 5 0 013.9 8.1c-.5.6-.9 1.4-.9 2.1V13a1 1 0 01-1 1H7a1 1 0 01-1-1v-.8c0-.7-.4-1.5-.9-2.1A5 5 0 019 2z" stroke="currentColor" strokeWidth="1.5"/>
+                <path d="M7 15.5h4M7.5 13h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+            )}
+          </button>
+          <button onClick={() => navigate('/login')} style={{ background: 'none', border: '1px solid var(--color-base-300)', borderRadius: '8px', padding: '6px 14px', cursor: 'pointer', fontFamily: font, fontSize: '13px', color: 'var(--color-base-content)' }}>Sign in</button>
+        </div>
+      </header>
+
+      {/* Card */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 16px' }}>
+        <div style={{ width: '100%', maxWidth: '440px', backgroundColor: 'var(--color-base-100)', borderRadius: '16px', border: '1px solid var(--color-base-300)', boxShadow: '0 8px 32px rgba(0,0,0,0.08)', padding: '36px 32px' }}>
+
+          {/* Heading */}
+          <div style={{ marginBottom: '28px' }}>
+            <h1 style={{ fontFamily: font, fontSize: '22px', fontWeight: 700, color: 'var(--color-base-content)', margin: '0 0 6px' }}>Create an account</h1>
+            <p style={{ fontFamily: font, fontSize: '13px', color: 'var(--color-base-content)', opacity: 0.5, margin: 0 }}>Get started with VoQuota for free</p>
+          </div>
+
+          {/* Account type toggle */}
+          <div style={{ display: 'flex', backgroundColor: 'var(--color-base-200)', borderRadius: '8px', padding: '3px', marginBottom: '22px', border: '1px solid var(--color-base-300)' }}>
+            {['Contractor', 'Customer'].map((type, i) => (
+              <button key={type} style={{ flex: 1, padding: '7px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontFamily: font, fontSize: '13px', fontWeight: 600, backgroundColor: i === 0 ? 'var(--color-base-100)' : 'transparent', color: 'var(--color-base-content)', boxShadow: i === 0 ? '0 1px 4px rgba(0,0,0,0.08)' : 'none', opacity: i === 0 ? 1 : 0.45 }}>
+                {type}
+              </button>
+            ))}
+          </div>
+
+          {/* Fields */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div>
+                <label style={{ display: 'block', fontFamily: font, fontSize: '11px', fontWeight: 600, color: 'var(--color-base-content)', opacity: 0.55, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '5px' }}>First Name</label>
+                <input type="text" placeholder="Jane" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontFamily: font, fontSize: '11px', fontWeight: 600, color: 'var(--color-base-content)', opacity: 0.55, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '5px' }}>Surname</label>
+                <input type="text" placeholder="Smith" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+              </div>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontFamily: font, fontSize: '11px', fontWeight: 600, color: 'var(--color-base-content)', opacity: 0.55, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '5px' }}>Email</label>
+              <input type="email" placeholder="jane@example.com" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontFamily: font, fontSize: '11px', fontWeight: 600, color: 'var(--color-base-content)', opacity: 0.55, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '5px' }}>Phone No. <span style={{ fontFamily: font, fontSize: '10px', fontWeight: 400, opacity: 0.4, textTransform: 'none', letterSpacing: 0 }}>Optional</span></label>
+              <input type="tel" placeholder="+44 7700 000000" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontFamily: font, fontSize: '11px', fontWeight: 600, color: 'var(--color-base-content)', opacity: 0.55, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '5px' }}>Password</label>
+              <input type="password" placeholder="••••••••" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontFamily: font, fontSize: '11px', fontWeight: 600, color: 'var(--color-base-content)', opacity: 0.55, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '5px' }}>Confirm Password</label>
+              <input type="password" placeholder="••••••••" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+          </div>
+
+          {/* Terms */}
+          <p style={{ fontFamily: font, fontSize: '11px', color: 'var(--color-base-content)', opacity: 0.4, margin: '16px 0 0', lineHeight: 1.6 }}>
+            By registering you agree to our{' '}
+            <a href="#" style={{ color: 'var(--color-base-content)', opacity: 1, textDecoration: 'underline' }}>Terms of Service</a>
+            {' '}and{' '}
+            <a href="#" style={{ color: 'var(--color-base-content)', opacity: 1, textDecoration: 'underline' }}>Privacy Policy</a>.
+          </p>
+
+          {/* Submit */}
+          <button style={{ width: '100%', marginTop: '20px', padding: '11px', borderRadius: '8px', border: 'none', backgroundColor: 'var(--color-base-content)', color: 'var(--color-base-100)', fontFamily: font, fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
+            Create account
+          </button>
+
+          {/* Divider */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '20px 0' }}>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--color-base-300)' }} />
+            <span style={{ fontFamily: font, fontSize: '11px', color: 'var(--color-base-content)', opacity: 0.35 }}>or</span>
+            <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--color-base-300)' }} />
+          </div>
+
+          {/* Login link */}
+          <p style={{ fontFamily: font, fontSize: '13px', color: 'var(--color-base-content)', opacity: 0.5, textAlign: 'center', margin: 0 }}>
+            Already have an account?{' '}
+            <span onClick={() => navigate('/login')} style={{ color: 'var(--color-base-content)', opacity: 1, fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' }}>Sign in</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
