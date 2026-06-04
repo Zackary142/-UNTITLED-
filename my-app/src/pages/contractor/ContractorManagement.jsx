@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Navbar from '../../components/Navbar'
+import { API, createInvoice, createQuote } from '../../api'
 
 // ── Shared styles ──────────────────────────────────────────────────────────────
 const font = 'Montserrat, sans-serif'
@@ -39,7 +41,7 @@ const divider = {
 }
 
 // ── Shared mini card ───────────────────────────────────────────────────────────
-function MiniCard({ title, subtitle, onHide }) {
+function MiniCard({ title, subtitle, actionLabel, onAction }) {
   const [visible, setVisible] = useState(true)
   if (!visible) return null
 
@@ -59,7 +61,14 @@ function MiniCard({ title, subtitle, onHide }) {
           {subtitle}
         </p>
       </div>
-      <button onClick={() => setVisible(false)} title="Minimise" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-content)', opacity: 0.35, fontSize: '18px', lineHeight: 1, padding: '2px 4px', flexShrink: 0 }}>×</button>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+        {actionLabel && (
+          <button onClick={onAction} style={{ padding: '6px 10px', borderRadius: '999px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}>
+            {actionLabel}
+          </button>
+        )}
+        <button onClick={() => setVisible(false)} title="Minimise" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-content)', opacity: 0.35, fontSize: '18px', lineHeight: 1, padding: '2px 4px' }}>×</button>
+      </div>
     </div>
   )
 }
@@ -289,28 +298,180 @@ function InvoiceModal({ onClose, onSave }) {
   )
 }
 
+function getCurrentUser() {
+  try {
+    return JSON.parse(localStorage.getItem('currentUser') || 'null')
+  } catch {
+    return null
+  }
+}
+
+function getUserKey(user) {
+  return (user?.id || user?.email || 'guest').toString().trim().toLowerCase().replace(/[^a-z0-9]/g, '_')
+}
+
 // ── Main page ──────────────────────────────────────────────────────────────────
 export default function ContractorManagement() {
+  const navigate = useNavigate()
+  const [currentUser, setCurrentUser] = useState(getCurrentUser)
   const [quoteModalOpen, setQuoteModalOpen] = useState(false)
   const [invoiceModalOpen, setInvoiceModalOpen] = useState(false)
   const [quotes, setQuotes] = useState([])
   const [invoices, setInvoices] = useState([])
+  const storageKey = currentUser ? `voquota:contractor:${getUserKey(currentUser)}` : null
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/login')
+      return
+    }
+
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || '{}')
+      setQuotes(saved.quotes || [])
+      setInvoices(saved.invoices || [])
+    } catch {
+      setQuotes([])
+      setInvoices([])
+    }
+  }, [currentUser, navigate, storageKey])
+
+  useEffect(() => {
+    if (!currentUser || !storageKey) return
+
+    localStorage.setItem(storageKey, JSON.stringify({
+      quotes,
+      invoices,
+      updatedAt: new Date().toISOString(),
+    }))
+  }, [currentUser, storageKey, quotes, invoices])
+
+  useEffect(() => {
+    const syncUser = () => setCurrentUser(getCurrentUser())
+    window.addEventListener('storage', syncUser)
+    return () => window.removeEventListener('storage', syncUser)
+  }, [])
 
   function formatSubtitle(card) {
     const name = `${card.FirstName || ''} ${card.LastName || ''}`.trim()
-    const amount = card.grandTotal > 0
-      ? `£${card.grandTotal.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+    const amount = (Number(card.grandTotal || 0) > 0)
+      ? `£${Number(card.grandTotal || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
       : 'Draft'
     const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
     return [name, amount, date].filter(Boolean).join(' · ')
+  }
+
+  async function handleGenerateDocument(type, card) {
+    console.log('generating', type, 'for id:', card?.id)
+    const token = localStorage.getItem('token')
+    console.log('token:', token)
+
+    if (!token) {
+      alert('Please sign in before generating a document.')
+      return
+    }
+
+    try {
+      const id = card?.id
+      if (!id) {
+        throw new Error('This document has not been created by the backend yet.')
+      }
+
+const res = await fetch(`${API}/api/${type === 'quote' ? 'Quote' : 'Invoice'}/${id}/pdf/download`, {
+  headers: { Authorization: `Bearer ${token}` },
+})
+
+console.log('response status:', res.status)
+console.log('response headers:', res.headers.get('content-type'))
+
+      if (!res.ok) {
+        const payload = await res.json().catch(() => null)
+        throw new Error(payload?.message || payload?.title || 'Unable to generate the document PDF.')
+      }
+
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      window.open(url, '_blank', 'noopener,noreferrer')
+    } catch (err) {
+      alert(err?.message || 'Unable to generate the document.')
+    }
+  }
+
+  if (!currentUser) {
+    return null
   }
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-base-200)' }}>
       <Navbar pageTitle="Document Pipeline" />
 
-      {quoteModalOpen && <QuoteModal onClose={() => setQuoteModalOpen(false)} onSave={card => { setQuotes(p => [...p, { ...card, id: Date.now() }]); setQuoteModalOpen(false) }} />}
-      {invoiceModalOpen && <InvoiceModal onClose={() => setInvoiceModalOpen(false)} onSave={card => { setInvoices(p => [...p, { ...card, id: Date.now() }]); setInvoiceModalOpen(false) }} />}
+      {quoteModalOpen && <QuoteModal onClose={() => setQuoteModalOpen(false)} onSave={async (card) => {
+        try {
+          const token = localStorage.getItem('token')
+          if (!token) {
+            alert('Please sign in before creating a quote.')
+            return
+          }
+
+          const items = [
+            ...(Number(card.labourRate || 0) > 0 || Number(card.labourHours || 0) > 0
+              ? [{ name: 'Labour', quantity: Number(card.labourHours || 0), unitPrice: Number(card.labourRate || 0) }]
+              : []),
+            ...(card.materials || []).filter(item => item.name || item.cost).map(item => ({ name: item.name || 'Material', quantity: 1, unitPrice: Number(item.cost || 0) })),
+            ...(card.additionals || []).filter(item => item.description || item.amount).map(item => ({ name: item.description || 'Additional', quantity: 1, unitPrice: Number(item.amount || 0) })),
+          ]
+
+          const created = await createQuote({
+            title: card.title || 'Untitled Quote',
+            customer: {
+              firstName: card.FirstName || '',
+              lastName: card.LastName || '',
+              email: card.Email || '',
+              number: card.Number || '',
+            },
+            items: items.length ? items : [{ name: card.title || 'Quote', quantity: 1, unitPrice: Number(card.grandTotal || 0) }],
+          }, token)
+
+          setQuotes(p => [...p, { ...card, ...created, id: created?.id || Date.now(), kind: 'quote' }])
+          setQuoteModalOpen(false)
+        } catch (err) {
+          alert(err?.message || 'Unable to create quote.')
+        }
+      }} />}
+      {invoiceModalOpen && <InvoiceModal onClose={() => setInvoiceModalOpen(false)} onSave={async (card) => {
+        try {
+          const token = localStorage.getItem('token')
+          if (!token) {
+            alert('Please sign in before creating an invoice.')
+            return
+          }
+
+          const items = [
+            ...(Number(card.labourRate || 0) > 0 || Number(card.labourHours || 0) > 0
+              ? [{ name: 'Labour', quantity: Number(card.labourHours || 0), unitPrice: Number(card.labourRate || 0) }]
+              : []),
+            ...(card.materials || []).filter(item => item.name || item.cost).map(item => ({ name: item.name || 'Material', quantity: 1, unitPrice: Number(item.cost || 0) })),
+            ...(card.additionals || []).filter(item => item.description || item.amount).map(item => ({ name: item.description || 'Additional', quantity: 1, unitPrice: Number(item.amount || 0) })),
+          ]
+
+          const created = await createInvoice({
+            title: card.title || 'Untitled Invoice',
+            customer: {
+              firstName: card.FirstName || '',
+              lastName: card.LastName || '',
+              email: card.Email || '',
+              number: card.Number || '',
+            },
+            items: items.length ? items : [{ name: card.title || 'Invoice', quantity: 1, unitPrice: Number(card.grandTotal || 0) }],
+            dueDate: card.dueDate || null,
+          }, token)
+
+          setInvoices(p => [...p, { ...card, ...created, id: created?.id || Date.now(), kind: 'invoice' }])
+          setInvoiceModalOpen(false)
+        } catch (err) {
+          alert(err?.message || 'Unable to create invoice.')
+        }
+      }} />}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-5">
 
@@ -346,7 +507,7 @@ export default function ContractorManagement() {
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '8px' }}>
-                {quotes.map(card => <MiniCard key={card.id} title={card.title || 'Untitled Quote'} subtitle={formatSubtitle(card)} />)}
+                {quotes.map(card => <MiniCard key={card.id} title={card.title || 'Untitled Quote'} subtitle={formatSubtitle(card)} actionLabel="Generate Quote" onAction={() => handleGenerateDocument('quote', card)} />)}
               </div>
             )}
             <button onClick={() => setQuoteModalOpen(true)} className="btn btn-ghost btn-sm w-full border border-dashed border-base-300 text-base-content/40 hover:text-base-content hover:border-base-400 mt-1">
@@ -397,9 +558,11 @@ export default function ContractorManagement() {
                     title={card.title || 'Untitled Invoice'}
                     subtitle={[
                       `${card.FirstName || ''} ${card.LastName || ''}`.trim(),
-                      card.grandTotal > 0 ? `£${card.grandTotal.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'Draft',
+                      Number(card.grandTotal || 0) > 0 ? `£${Number(card.grandTotal || 0).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'Draft',
                       card.dueDate ? `Due ${new Date(card.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}` : new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
                     ].filter(s => s.trim()).join(' · ')}
+                    actionLabel="Generate Invoice"
+                    onAction={() => handleGenerateDocument('invoice', card)}
                   />
                 ))}
               </div>

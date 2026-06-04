@@ -1,11 +1,48 @@
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
+import { login } from '../api'
 
 const font = 'Montserrat, sans-serif'
 
 export default function LoginPage() {
   const navigate = useNavigate()
   const { dark, toggle } = useTheme()
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setError(null)
+    setLoading(true)
+    try {
+      const result = await login({ email, password })
+      const token = result?.token || result?.accessToken || result?.jwt || result?.data?.token || result?.data?.accessToken || result?.data?.jwt
+      const userId = result?.userId || result?.id || result?.user?.id || result?.data?.userId || result?.data?.id || email.trim().toLowerCase()
+      const userName = result?.name || result?.user?.name || result?.email || email
+
+      if (token) {
+        localStorage.setItem('token', token)
+        localStorage.setItem('currentUser', JSON.stringify({
+          id: userId,
+          email: email.trim().toLowerCase(),
+          name: userName,
+        }))
+        navigate('/contractor')
+      } else if (result?.message) {
+        setError(result.message)
+      } else {
+        setError('Login failed')
+      }
+    } catch (err) {
+      setError(err?.message || 'Network error')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-base-200)', display: 'flex', flexDirection: 'column' }}>
@@ -36,7 +73,7 @@ export default function LoginPage() {
 
       {/* Card */}
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 16px' }}>
-        <div style={{ width: '100%', maxWidth: '400px', backgroundColor: 'var(--color-base-100)', borderRadius: '16px', border: '1px solid var(--color-base-300)', boxShadow: '0 8px 32px rgba(0,0,0,0.08)', padding: '36px 32px' }}>
+        <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '400px', backgroundColor: 'var(--color-base-100)', borderRadius: '16px', border: '1px solid var(--color-base-300)', boxShadow: '0 8px 32px rgba(0,0,0,0.08)', padding: '36px 32px' }}>
 
           {/* Heading */}
           <div style={{ marginBottom: '28px' }}>
@@ -48,20 +85,41 @@ export default function LoginPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div>
               <label style={{ display: 'block', fontFamily: font, fontSize: '11px', fontWeight: 600, color: 'var(--color-base-content)', opacity: 0.55, textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '5px' }}>Email</label>
-              <input type="email" placeholder="jane@example.com" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+              <input
+                type="email"
+                placeholder="jane@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+              />
             </div>
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
                 <label style={{ fontFamily: font, fontSize: '11px', fontWeight: 600, color: 'var(--color-base-content)', opacity: 0.55, textTransform: 'uppercase', letterSpacing: '0.4px' }}>Password</label>
                 <a href="#" style={{ fontFamily: font, fontSize: '11px', color: 'var(--color-base-content)', opacity: 0.4, textDecoration: 'none' }}>Forgot password?</a>
               </div>
-              <input type="password" placeholder="••••••••" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+              />
             </div>
           </div>
 
+          {/* Error */}
+          {error && <div style={{ marginTop: 12, color: 'var(--color-accent)', fontFamily: font, fontSize: 13 }}>{error}</div>}
+
           {/* Submit */}
-          <button style={{ width: '100%', marginTop: '24px', padding: '11px', borderRadius: '8px', border: 'none', backgroundColor: 'var(--color-base-content)', color: 'var(--color-base-100)', fontFamily: font, fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}>
-            Sign in
+          <button
+            type="submit"
+            disabled={loading}
+            style={{ width: '100%', marginTop: '24px', padding: '11px', borderRadius: '8px', border: 'none', backgroundColor: loading ? 'rgba(0,0,0,0.12)' : 'var(--color-base-content)', color: 'var(--color-base-100)', fontFamily: font, fontSize: '14px', fontWeight: 600, cursor: loading ? 'default' : 'pointer' }}
+          >
+            {loading ? 'Signing in…' : 'Sign in'}
           </button>
 
           {/* Divider */}
@@ -76,7 +134,7 @@ export default function LoginPage() {
             Don't have an account?{' '}
             <span onClick={() => navigate('/register')} style={{ color: 'var(--color-base-content)', opacity: 1, fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' }}>Register</span>
           </p>
-        </div>
+        </form>
       </div>
     </div>
   )
