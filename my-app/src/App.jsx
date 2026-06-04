@@ -6,6 +6,8 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import './styles/App.css'
 
+
+
 function HomeNav() {
   const { dark, toggle } = useTheme()
   const navigate = useNavigate()
