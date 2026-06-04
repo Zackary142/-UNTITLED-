@@ -48,21 +48,21 @@ h1 {
 }
 
 [data-theme="voquota-light"] {
-  --color-base-100: #F5F1E8;
-  --color-base-200: #F3EDE2;
-  --color-base-300: #E6DDCF;
-  --color-base-content: #1E1E1E;
-  --color-accent: #D6C6A8;
-  --color-accent-content: #1E1E1E;
+  --color-base-100: #FFFFFF;
+  --color-base-200: #F8FAFC;
+  --color-base-300: #E2E8F0;
+  --color-base-content: #0F172A;
+  --color-accent: #2563EB;
+  --color-accent-content: #FFFFFF;
 }
 
 [data-theme="voquota-dark"] {
   --color-base-100: #1E1E1E;
   --color-base-200: #171717;
   --color-base-300: #2c2c2c;
-  --color-base-content: #F5F1E8;
-  --color-accent: #3a3530;
-  --color-accent-content: #F5F1E8;
+  --color-base-content: #F8FAFC;
+  --color-accent: #2563EB;
+  --color-accent-content: #FFFFFF;
 }
 
 .vq-logo {
