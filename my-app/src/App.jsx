@@ -4,6 +4,11 @@ import ContractorManagement from './pages/contractor/ContractorManagement'
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import WelcomeScreen from './pages/WelcomeScreen'
+import BusinessSetupPage from './pages/BusinessSetupPage'
+import FirstQuotePage from './pages/FirstQuotePage'
+import QuoteReadyPage from './pages/QuoteReadyPage'
+import BusinessProfilePage from './pages/BusinessProfilePage'
 import './styles/App.css'
 
 
@@ -75,6 +80,11 @@ function App() {
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/welcome" element={<WelcomeScreen />} />
+        <Route path="/business-setup" element={<BusinessSetupPage />} />
+        <Route path="/first-quote" element={<FirstQuotePage />} />
+        <Route path="/quote-ready" element={<QuoteReadyPage />} />
+        <Route path="/business-profile" element={<BusinessProfilePage />} />
       </Routes>
     </ThemeProvider>
   )

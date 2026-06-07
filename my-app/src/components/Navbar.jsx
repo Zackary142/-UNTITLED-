@@ -1,6 +1,8 @@
+import { useNavigate } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 
 export default function Navbar({ pageTitle }) {
+  const navigate = useNavigate()
   const { dark, toggle } = useTheme()
 
   return (
@@ -54,7 +56,7 @@ export default function Navbar({ pageTitle }) {
         </button>
 
         {/* Settings — hidden on mobile */}
-        <button className="hidden sm:flex btn btn-ghost btn-sm btn-circle">
+        <button className="hidden sm:flex btn btn-ghost btn-sm btn-circle" onClick={() => navigate('/business-profile')}>
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
             <circle cx="9" cy="9" r="2" stroke="currentColor" strokeWidth="1.5"/>
             <path d="M9 2v1M9 15v1M2 9h1M15 9h1M3.93 3.93l.7.7M13.37 13.37l.7.7M3.93 14.07l.7-.7M13.37 4.63l.7-.7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
@@ -79,7 +81,7 @@ export default function Navbar({ pageTitle }) {
         </button>
 
         {/* Avatar */}
-        <div className="w-8 h-8 rounded-full bg-black cursor-pointer flex-shrink-0" />
+        <button onClick={() => navigate('/business-profile')} className="w-8 h-8 rounded-full bg-black cursor-pointer flex-shrink-0 border border-base-300" aria-label="Open business profile" />
       </div>
     </div>
   )

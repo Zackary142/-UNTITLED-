@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../../components/Navbar'
-import { API, createInvoice, createQuote } from '../../api'
+import { API, convertQuoteToInvoice, createInvoice, createQuote } from '../../api'
 
 // ── Shared styles ──────────────────────────────────────────────────────────────
 const font = 'Montserrat, sans-serif'
@@ -41,7 +41,7 @@ const divider = {
 }
 
 // ── Shared mini card ───────────────────────────────────────────────────────────
-function MiniCard({ title, subtitle, actionLabel, onAction }) {
+function MiniCard({ title, subtitle, actionLabel, onAction, secondaryActionLabel, onSecondaryAction }) {
   const [visible, setVisible] = useState(true)
   if (!visible) return null
 
@@ -61,10 +61,15 @@ function MiniCard({ title, subtitle, actionLabel, onAction }) {
           {subtitle}
         </p>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
         {actionLabel && (
           <button onClick={onAction} style={{ padding: '6px 10px', borderRadius: '999px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}>
             {actionLabel}
+          </button>
+        )}
+        {secondaryActionLabel && (
+          <button onClick={onSecondaryAction} style={{ padding: '6px 10px', borderRadius: '999px', border: '1px solid var(--color-base-300)', backgroundColor: 'var(--color-base-200)', color: 'var(--color-base-content)', fontFamily: font, fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}>
+            {secondaryActionLabel}
           </button>
         )}
         <button onClick={() => setVisible(false)} title="Minimise" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-base-content)', opacity: 0.35, fontSize: '18px', lineHeight: 1, padding: '2px 4px' }}>×</button>
@@ -320,21 +325,79 @@ export default function ContractorManagement() {
   const [invoices, setInvoices] = useState([])
   const storageKey = currentUser ? `voquota:contractor:${getUserKey(currentUser)}` : null
 
-  useEffect(() => {
-    if (!currentUser) {
-      navigate('/login')
-      return
+ useEffect(() => {
+  if (!currentUser) {
+    navigate('/login')
+    return
+  }
+
+  async function loadData() {
+    const token = localStorage.getItem('token')
+
+    // Load from backend if we have a token
+    if (token) {
+      try {
+        const [quotesRes, invoicesRes] = await Promise.all([
+          fetch(`${API}/api/Quote`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API}/api/Invoice`, { headers: { Authorization: `Bearer ${token}` } }),
+        ])
+
+        if (quotesRes.ok) {
+          const data = await quotesRes.json()
+          // Map backend response to our card format
+          const mapped = data.map(q => ({
+            id: q.id,
+            title: q.title || q.qReference,
+            FirstName: q.customer?.firstName || '',
+            LastName: q.customer?.lastName || '',
+            Email: q.customer?.email || '',
+            Number: q.customer?.number || '',
+            grandTotal: q.items?.reduce((sum, i) => sum + (i.quantity * i.unitPrice), 0) || 0,
+            kind: 'quote',
+          }))
+          setQuotes(mapped)
+        }
+
+        if (invoicesRes.ok) {
+          const data = await invoicesRes.json()
+          const mapped = data.map(i => ({
+            id: i.id,
+            title: i.title || i.iReference,
+            FirstName: i.customer?.firstName || '',
+            LastName: i.customer?.lastName || '',
+            Email: i.customer?.email || '',
+            Number: i.customer?.number || '',
+            grandTotal: i.items?.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0) || 0,
+            dueDate: i.dueDate || null,
+            kind: 'invoice',
+          }))
+          setInvoices(mapped)
+        }
+        return
+      } catch (err) {
+        console.error('Failed to load from backend:', err)
+      }
     }
 
+    // Fallback to localStorage
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey) || '{}')
-      setQuotes(saved.quotes || [])
+      let loadedQuotes = saved.quotes || []
+      const firstQuote = JSON.parse(localStorage.getItem('voquota:firstQuote') || 'null')
+      if (firstQuote && !loadedQuotes.find(q => q.id === firstQuote.id)) {
+        loadedQuotes = [firstQuote, ...loadedQuotes]
+        localStorage.removeItem('voquota:firstQuote')
+      }
+      setQuotes(loadedQuotes)
       setInvoices(saved.invoices || [])
     } catch {
       setQuotes([])
       setInvoices([])
     }
-  }, [currentUser, navigate, storageKey])
+  }
+
+  loadData()
+}, [currentUser, navigate, storageKey])
 
   useEffect(() => {
     if (!currentUser || !storageKey) return
@@ -345,6 +408,7 @@ export default function ContractorManagement() {
       updatedAt: new Date().toISOString(),
     }))
   }, [currentUser, storageKey, quotes, invoices])
+  
 
   useEffect(() => {
     const syncUser = () => setCurrentUser(getCurrentUser())
@@ -361,41 +425,58 @@ export default function ContractorManagement() {
     return [name, amount, date].filter(Boolean).join(' · ')
   }
 
-  async function handleGenerateDocument(type, card) {
-    console.log('generating', type, 'for id:', card?.id)
+  async function handleConvertToInvoice(card) {
     const token = localStorage.getItem('token')
-    console.log('token:', token)
-
     if (!token) {
-      alert('Please sign in before generating a document.')
+      alert('Please sign in before converting a quote to an invoice.')
       return
     }
 
     try {
-      const id = card?.id
-      if (!id) {
-        throw new Error('This document has not been created by the backend yet.')
-      }
-
-const res = await fetch(`${API}/api/${type === 'quote' ? 'Quote' : 'Invoice'}/${id}/pdf/download`, {
-  headers: { Authorization: `Bearer ${token}` },
-})
-
-console.log('response status:', res.status)
-console.log('response headers:', res.headers.get('content-type'))
-
-      if (!res.ok) {
-        const payload = await res.json().catch(() => null)
-        throw new Error(payload?.message || payload?.title || 'Unable to generate the document PDF.')
-      }
-
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      window.open(url, '_blank', 'noopener,noreferrer')
+      if (!card?.id) throw new Error('This quote has not been created by the backend yet.')
+      const created = await convertQuoteToInvoice(card.id, token)
+      const invoiceCard = { ...card, ...created, id: created?.id || card.id, kind: 'invoice' }
+      setInvoices(prev => [invoiceCard, ...prev])
+      alert('Quote converted to invoice successfully.')
     } catch (err) {
-      alert(err?.message || 'Unable to generate the document.')
+      alert(err?.message || 'Unable to convert the quote to an invoice.')
     }
   }
+
+  async function handleGenerateDocument(type, card) {
+  const token = localStorage.getItem('token')
+  if (!token) { alert('Please sign in before generating a document.'); return }
+
+  const id = card?.id
+  if (!id) { alert('This document has not been saved to the backend yet.'); return }
+
+  try {
+    const endpoint = type === 'quote' ? 'Quote' : 'Invoice'
+
+    // Step 1 — generate the PDF
+    const genRes = await fetch(`${API}/api/${endpoint}/${id}/pdf`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!genRes.ok) {
+      const payload = await genRes.json().catch(() => null)
+      throw new Error(payload?.message || payload?.title || `Failed to generate PDF (${genRes.status})`)
+    }
+
+    // Step 2 — download it
+    const dlRes = await fetch(`${API}/api/${endpoint}/${id}/pdf/download`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!dlRes.ok) {
+      const payload = await dlRes.json().catch(() => null)
+      throw new Error(payload?.message || payload?.title || `Failed to download PDF (${dlRes.status})`)
+    }
+
+    const blob = await dlRes.blob()
+    window.open(URL.createObjectURL(blob), '_blank', 'noopener,noreferrer')
+  } catch (err) {
+    alert(err?.message || 'Unable to generate the document.')
+  }
+}
 
   if (!currentUser) {
     return null
@@ -507,7 +588,7 @@ console.log('response headers:', res.headers.get('content-type'))
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '8px' }}>
-                {quotes.map(card => <MiniCard key={card.id} title={card.title || 'Untitled Quote'} subtitle={formatSubtitle(card)} actionLabel="Generate Quote" onAction={() => handleGenerateDocument('quote', card)} />)}
+                {quotes.map(card => <MiniCard key={card.id} title={card.title || 'Untitled Quote'} subtitle={formatSubtitle(card)} actionLabel="Generate Quote" onAction={() => handleGenerateDocument('quote', card)} secondaryActionLabel="Convert to invoice" onSecondaryAction={() => handleConvertToInvoice(card)} />)}
               </div>
             )}
             <button onClick={() => setQuoteModalOpen(true)} className="btn btn-ghost btn-sm w-full border border-dashed border-base-300 text-base-content/40 hover:text-base-content hover:border-base-400 mt-1">
