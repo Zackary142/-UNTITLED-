@@ -9,6 +9,7 @@ import BusinessSetupPage from './pages/BusinessSetupPage'
 import FirstQuotePage from './pages/FirstQuotePage'
 import QuoteReadyPage from './pages/QuoteReadyPage'
 import BusinessProfilePage from './pages/BusinessProfilePage'
+import CustomerQuoteView from './pages/CustomerQuoteView'
 import './styles/App.css'
 
 
@@ -85,6 +86,7 @@ function App() {
         <Route path="/first-quote" element={<FirstQuotePage />} />
         <Route path="/quote-ready" element={<QuoteReadyPage />} />
         <Route path="/business-profile" element={<BusinessProfilePage />} />
+        <Route path="/quote/:id" element={<CustomerQuoteView />} />
       </Routes>
     </ThemeProvider>
   )
