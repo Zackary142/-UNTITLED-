@@ -82,8 +82,8 @@ export default function LandingPage() {
               </svg>
             )}
           </button>
-          <button onClick={() => navigate('/login')} style={{ background: 'none', border: '1px solid var(--color-base-300)', borderRadius: '8px', padding: '7px 16px', cursor: 'pointer', fontFamily: font, fontSize: '14px', color: 'var(--color-base-content)' }}>Log in</button>
-          <button onClick={() => navigate('/register')} style={{ backgroundColor: 'var(--color-accent)', color: '#fff', border: 'none', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: font, fontSize: '14px', fontWeight: 600 }}>Sign up</button>
+          {/* <button onClick={() => navigate('/login')} style={{ background: 'none', border: '1px solid var(--color-base-300)', borderRadius: '8px', padding: '7px 16px', cursor: 'pointer', fontFamily: font, fontSize: '14px', color: 'var(--color-base-content)' }}>Log in</button>
+          <button onClick={() => navigate('/register')} style={{ backgroundColor: 'var(--color-accent)', color: '#fff', border: 'none', borderRadius: '8px', padding: '8px 16px', cursor: 'pointer', fontFamily: font, fontSize: '14px', fontWeight: 600 }}>Sign up</button> */}
         </div>
       </header>
 
@@ -104,12 +104,12 @@ export default function LandingPage() {
         </p>
 
         <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          <button onClick={() => navigate('/register')} style={{ backgroundColor: 'var(--color-accent)', color: '#fff', border: 'none', borderRadius: '10px', padding: '12px 28px', cursor: 'pointer', fontFamily: font, fontSize: '15px', fontWeight: 600 }}>
+          {/* <button onClick={() => navigate('/register')} style={{ backgroundColor: 'var(--color-accent)', color: '#fff', border: 'none', borderRadius: '10px', padding: '12px 28px', cursor: 'pointer', fontFamily: font, fontSize: '15px', fontWeight: 600 }}>
             Get started for free
           </button>
           <button onClick={() => navigate('/login')} style={{ backgroundColor: 'transparent', color: 'var(--color-base-content)', border: '1px solid var(--color-base-300)', borderRadius: '10px', padding: '12px 28px', cursor: 'pointer', fontFamily: font, fontSize: '15px', fontWeight: 600 }}>
             Log in
-          </button>
+          </button> */}
         </div>
       </section>
 
@@ -162,9 +162,9 @@ export default function LandingPage() {
               <span style={{ fontFamily: font, fontSize: '13px', color: 'var(--color-base-content)', opacity: 0.75 }}>{item}</span>
             </div>
           ))}
-          <button onClick={() => navigate('/register')} style={{ width: '100%', marginTop: '16px', backgroundColor: 'var(--color-accent)', color: '#fff', border: 'none', borderRadius: '8px', padding: '11px', cursor: 'pointer', fontFamily: font, fontSize: '14px', fontWeight: 600 }}>
+          {/* <button onClick={() => navigate('/register')} style={{ width: '100%', marginTop: '16px', backgroundColor: 'var(--color-accent)', color: '#fff', border: 'none', borderRadius: '8px', padding: '11px', cursor: 'pointer', fontFamily: font, fontSize: '14px', fontWeight: 600 }}>
             Get started
-          </button>
+          </button> */}
         </div>
       </section>
 
