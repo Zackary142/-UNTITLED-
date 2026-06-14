@@ -8,6 +8,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -52,7 +56,7 @@ h1 {
   --color-base-200: #F8FAFC;
   --color-base-300: #E2E8F0;
   --color-base-content: #0F172A;
-  --color-accent: #2563EB;
+  --color-accent: #ebbd25;
   --color-accent-content: #FFFFFF;
 }
 
@@ -61,7 +65,7 @@ h1 {
   --color-base-200: #171717;
   --color-base-300: #2c2c2c;
   --color-base-content: #F8FAFC;
-  --color-accent: #2563EB;
+  --color-accent: #ebbd25;
   --color-accent-content: #FFFFFF;
 }
 

@@ -56,29 +56,12 @@ function HomeNav() {
   )
 }
 
-function HomePage() {
-  return (
-    <>
-      <HomeNav />
-      <main className="landing-page">
-        <h1 className="brand-title">VoQuota</h1>
-        <p className="brand-subtitle">Quote, Invoice, That's it.</p>
-        <div className="brand-footer">
-          <span className="footer-date">JULY 2026</span>
-          <span className="footer-email">inquiries@VoQuota.com</span>
-        </div>
-      </main>
-    </>
-  )
-}
-
 function App() {
   return (
     <ThemeProvider>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/contractor" element={<ContractorManagement />} />
-        <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/welcome" element={<WelcomeScreen />} />
